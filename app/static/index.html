@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+  <meta name="theme-color" content="#0e0f13" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f6f6f8" media="(prefers-color-scheme: light)">
+  <meta name="color-scheme" content="dark light">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Local DS">
+  <meta name="referrer" content="same-origin">
+  <title>Local DS</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/static/icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="/static/app.css?v=0.5.1">
+  <script type="module" src="/static/app.js?v=0.5.1"></script>
+</head>
+<body>
+  <div id="app">
+    <main id="view" aria-live="polite">
+      <div class="boot"><div class="spinner" aria-label="Loading"></div></div>
+    </main>
+    <nav id="tabbar" class="tabbar" hidden aria-label="Main">
+      <a href="#/feed" data-tab="feed" class="tab">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M4 12h16M4 19h10" /></svg>
+        <span>Feed</span>
+      </a>
+      <a href="#/reels" data-tab="reels" class="tab">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="3" /><path d="M10 9.5v5l4.5-2.5z" class="fill" /></svg>
+        <span>Reels</span>
+      </a>
+      <button type="button" data-tab="menu" class="tab" id="menu-btn">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.6" class="fill" /><circle cx="12" cy="12" r="1.6" class="fill" /><circle cx="19" cy="12" r="1.6" class="fill" /></svg>
+        <span>More</span>
+      </button>
+    </nav>
+    <div id="toast-root" class="toast-root" aria-live="assertive"></div>
+    <div id="sheet-root"></div>
+  </div>
+  <noscript>Local DS needs JavaScript.</noscript>
+</body>
+</html>

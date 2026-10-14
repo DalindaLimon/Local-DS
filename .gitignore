@@ -1,0 +1,45 @@
+# Secrets and local config
+CLAUDE.local.md
+.claude/settings.local.json
+.claude/.cc-writes/
+.env
+.env.*
+!.env.example
+
+# Runtime data: database, videos, thumbnails, backups
+data/
+data.*/
+backups/
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+*.mp4
+*.webm
+*.mkv
+*.part
+.secret_key
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+*.egg-info/
+build/
+dist/
+
+# Editors / OS
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db

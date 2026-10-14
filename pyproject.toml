@@ -1,0 +1,43 @@
+[project]
+name = "localds"
+dynamic = ["version"]
+description = "Self-hosted, mobile-first feed + YouTube Shorts reels for a few friends"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.12"
+
+[tool.setuptools.dynamic]
+version = { attr = "app.__version__" }
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+extend-exclude = ["app/static"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "SIM", "RUF"]
+ignore = [
+  "S101",   # assert is fine in tests
+  "S603",   # subprocess with argument lists (no shell) is intended
+  "S607",   # ffmpeg/ffprobe are resolved from PATH on purpose
+  "S608",   # SQL is built from constants / integer lists only
+  "B008",   # FastAPI Depends() in defaults
+  "RUF001", "RUF002", "RUF003",  # unicode punctuation in strings/comments
+  "SIM105",
+  "E501",   # the formatter handles line length; long SQL/strings are fine
+  "S311",   # random is used for feed shuffling, not for security
+  "UP047",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S105", "S106", "S107", "S311", "S108", "E501"]
+"app/seed.py" = ["S311", "E501"]
+"scripts/*" = ["E501", "S105", "S106"]
+"app/discovery.py" = ["E501"]
+
+[tool.ruff.format]
+line-ending = "lf"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = ["ignore::DeprecationWarning"]

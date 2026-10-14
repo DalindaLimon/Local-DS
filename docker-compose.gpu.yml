@@ -1,0 +1,8 @@
+# Optional: pass an Intel/AMD iGPU into the container for VAAPI H.264 encoding.
+# install.sh enables this automatically when /dev/dri exists by setting
+#   COMPOSE_FILE=docker-compose.yml:docker-compose.gpu.yml
+# in .env. Without it, encoding falls back to libx264 (fine for Shorts).
+services:
+  localds:
+    devices:
+      - /dev/dri:/dev/dri

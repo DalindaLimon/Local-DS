@@ -1,0 +1,36 @@
+name: localds
+
+services:
+  localds:
+    # IMAGE unset  -> built locally from this folder (docker compose up -d --build)
+    # IMAGE=ghcr.io/<user>/<repo>:latest -> prebuilt multi-arch image (docker compose pull)
+    image: ${IMAGE:-localds:local}
+    build: .
+    container_name: localds
+    restart: unless-stopped
+    init: true
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATA_DIR: /data
+    ports:
+      - "${BIND_ADDRESS:-0.0.0.0}:${PORT:-8081}:8085"
+    volumes:
+      - ${DATA_PATH:-./data}:/data
+    mem_limit: ${MEM_LIMIT:-2g}
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import sys,urllib.request; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8080/healthz', timeout=5).status == 200 else 1)"
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
