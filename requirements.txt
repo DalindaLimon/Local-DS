@@ -1,5 +1,5 @@
 # Runtime dependencies (yt-dlp is installed separately in the image and updated daily)
-fastapi>=0.115,<1
+fastapi>=0.143.0,<1
 uvicorn[standard]>=0.30,<1
 apscheduler>=3.10,<4
 feedparser>=6.0.11,<7
