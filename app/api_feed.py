@@ -19,8 +19,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from fastapi.responses import FileResponse, Response, StreamingResponse
 from pydantic import BaseModel, Field
 
+from app import icons, uploads
 from app import personalization as P
-from app import uploads
 from app.config import Settings
 from app.db import now, tx
 from app.deps import current_user, get_db, get_settings
@@ -84,7 +84,8 @@ class Ctx:
 
 ITEM_SELECT = """
 SELECT i.id, i.source_id, i.url, i.title, i.author, i.excerpt, i.image_url, i.published_at,
-       s.title AS source_title, s.kind AS source_kind, s.icon_url AS source_icon, s.created_by AS source_owner,
+       s.title AS source_title, s.kind AS source_kind, s.icon_path AS source_icon_path,
+       s.icon_checked_at AS source_icon_v, s.created_by AS source_owner,
        r.value AS my_reaction, sn.seen_at,
        (SELECT COUNT(*) FROM comments c WHERE c.item_type='item' AND c.item_id=i.id) AS comment_count,
        (SELECT COUNT(*) FROM reactions x WHERE x.item_type='item' AND x.item_id=i.id AND x.value=1) AS likes,
@@ -121,7 +122,7 @@ def item_json(row: sqlite3.Row, ctx: Ctx, explored: bool = False) -> dict:
             "id": row["source_id"],
             "title": row["source_title"],
             "kind": row["source_kind"],
-            "icon": row["source_icon"],
+            "icon": icons.icon_url(row, "source_id", "source_icon_path", "source_icon_v"),
         },
         "title": row["title"],
         "url": row["url"],
@@ -294,7 +295,8 @@ def mark_seen(body: SeenBody, user=Depends(current_user), conn: sqlite3.Connecti
 
 
 SHORT_SELECT = """
-SELECT sh.*, s.title AS source_title, r.value AS my_reaction, sn.seen_at,
+SELECT sh.*, s.title AS source_title, s.icon_path AS source_icon_path, s.icon_checked_at AS source_icon_v,
+       r.value AS my_reaction, sn.seen_at,
        (SELECT COUNT(*) FROM comments c WHERE c.item_type='short' AND c.item_id=sh.id) AS comment_count
 FROM shorts sh
 LEFT JOIN sources s ON s.id = sh.source_id
@@ -312,6 +314,7 @@ def short_json(row: sqlite3.Row, ctx: Ctx, explored: bool = False) -> dict:
         "source_id": row["source_id"],
         "title": row["title"],
         "channel": row["channel_name"] or row["source_title"] or "",
+        "icon": icons.icon_url(row, "source_id", "source_icon_path", "source_icon_v") if row["source_id"] else None,
         "url": row["url"],
         "video": f"/media/video/{vid}" if row["status"] == "available" else None,
         "thumb": f"/media/thumb/{vid}" if row["thumb_path"] else None,
@@ -871,6 +874,22 @@ def upload_media(
         content_disposition_type="inline" if inline else "attachment",
         headers=headers,
     )
+
+
+@router.get("/media/icon/{source_id}")
+def source_icon(
+    source_id: int,
+    user=Depends(current_user),
+    conn: sqlite3.Connection = Depends(get_db),
+    s: Settings = Depends(get_settings),
+):
+    row = conn.execute("SELECT icon_path FROM sources WHERE id=?", (source_id,)).fetchone()
+    path = icons.icons_dir(s) / Path(row["icon_path"]).name if row and row["icon_path"] else None
+    if not path or not path.is_file():
+        raise HTTPException(404)
+    # The URL carries ?v=<check time>, so a changed picture gets a new URL and this can be cached long.
+    headers = {"Cache-Control": "private, max-age=2592000", "Content-Security-Policy": "default-src 'none'; sandbox"}
+    return FileResponse(path, headers=headers)
 
 
 @router.get("/media/demo/{name}")

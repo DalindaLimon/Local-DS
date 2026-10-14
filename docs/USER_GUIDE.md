@@ -178,7 +178,7 @@ Your own and your friend's posts appear here as sources of type *Posts*.
   below `MIN_FREE_DISK_MB`.
 - **Versions and encoding:** app version, yt-dlp version, whether the iGPU is used for encoding.
 - **Jobs:** last run time and result of *Refresh feeds*, *Fetch Shorts*, *Cleanup + reconcile*, *Recompute
-  weights* and *Update yt-dlp*, each with a **Run** button.
+  weights*, *Update yt-dlp* and *Fetch source pictures*, each with a **Run** button.
 - **Ask AI:** the connected LLM server and model, with a **Test connection** button.
 - **Settings:** change almost every `.env` setting from the browser, grouped into *Reddit & feeds* (including
   your Reddit username for the User-Agent), *Shorts & storage*, *Personalization*, *Ask AI* and *General*.

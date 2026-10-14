@@ -18,13 +18,13 @@ Target deployment: Docker on a small home server, e.g. inside an unprivileged De
 with an Intel iGPU for VAAPI. Remote access through Tailscale (preferred) or a Cloudflare Tunnel; never
 port-forwarded. Personal machine details live in `CLAUDE.local.md` (gitignored); keep them out of tracked files.
 
-Version: 0.5.1 (`app/__init__.py`). Published to GitHub; images built to ghcr.io on `v*` tags.
+Version: 0.5.2 (`app/__init__.py`). Published to GitHub; images built to ghcr.io on `v*` tags.
 
 ## Stack and hard constraints
 
 - Python 3.12+, FastAPI, SQLite (WAL), APScheduler in-process, single uvicorn worker.
 - Frontend: plain ES module JavaScript + CSS in `app/static/`, **no npm, no build step**. PWA (manifest + service worker caching the shell only).
-- One container, all state in `/data` (db, videos, thumbs, tmp, demo, `.secret_key`).
+- One container, all state in `/data` (db, videos, thumbs, uploads, icons, tmp, demo, `.secret_key`).
 - yt-dlp + ffmpeg in the image; yt-dlp self-updates daily via pip into the app-owned venv.
 - Keep dependencies minimal. New Python packages need a good reason.
 
@@ -42,6 +42,7 @@ app/
   feeds.py           classify_input(), parse_feed(), discover_feed(), fetch_source() with Reddit 429/403 backoff
   sources.py         add_source(): reddit / youtube (resolve via yt-dlp) / url (autodiscovery)
   uploads.py         post attachments: raw-body upload, /data/uploads, inline only for verified media types
+  icons.py           source pictures (YouTube avatar, subreddit icon, feed logo) cached in /data/icons
   shorts.py          yt-dlp listing/downloading, transcode (remux, VAAPI, libx264), thumbnails, yt-dlp update
   retention.py       cleanup() (expire old video files), reconcile() (disk vs db, both directions), disk_usage()
   personalization.py score/weight math, react(), weighted_shuffle(), mix_exploration(), why_line()
@@ -148,7 +149,7 @@ Defaults: LIKE_BASE 1.25, DISLIKE_FACTOR 0.8, halflife 30 d, weights 0.1–5.0, 
 
 ## Status and known gaps
 
-Verified in the build sandbox: 115 tests pass, ruff/shellcheck clean, UI checked in headless Chromium at
+Verified in the build sandbox: 122 tests pass, ruff/shellcheck clean, UI checked in headless Chromium at
 360/390/430 px and 1280 px (dark + light), download pipeline tested with a fake yt-dlp + real ffmpeg.
 
 **Not yet verified (sandbox had no Docker Hub / internet access):**

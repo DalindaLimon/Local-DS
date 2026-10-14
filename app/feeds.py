@@ -151,10 +151,10 @@ def parse_feed(content: bytes, base_url: str | None = None, reddit: bool = False
     title = html_to_text(feed.get("title", "")) or (urlsplit(base_url).hostname if base_url else "Feed")
     site_url = feed.get("link")
     icon = None
-    image = feed.get("image") or {}
+    image = {} if reddit else (feed.get("image") or {})  # Reddit only sends its generic logo; see app/icons.py
     if isinstance(image, dict) and str(image.get("href", "")).startswith("http"):
         icon = image["href"]
-    elif str(feed.get("icon", "")).startswith("http"):
+    elif not reddit and str(feed.get("icon", "")).startswith("http"):
         icon = feed["icon"]
     entries: list[ParsedEntry] = []
     for e in parsed.get("entries", [])[:200]:

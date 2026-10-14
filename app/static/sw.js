@@ -1,9 +1,9 @@
 // Service worker: caches the app shell only. API calls and media are never cached.
-const VERSION = 'localds-shell-0.5.1';
+const VERSION = 'localds-shell-0.5.2';
 const SHELL = [
   '/',
-  '/static/app.css?v=0.5.1',
-  '/static/app.js?v=0.5.1',
+  '/static/app.css?v=0.5.2',
+  '/static/app.js?v=0.5.2',
   '/static/icons/icon.svg',
   '/static/icons/icon-192.png',
   '/static/icons/icon-512.png',

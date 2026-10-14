@@ -75,7 +75,8 @@ Shared by all users.
 | `kind` | `rss`, `reddit`, `youtube`, `demo`, `user` (a user's own posts) |
 | `title` | Display name; for `user` sources the author's username |
 | `feed_url` | RSS/Atom URL. Unique when not NULL. NULL for `user` and `demo` |
-| `site_url`, `icon_url` | From the feed |
+| `site_url`, `icon_url` | From the feed; `icon_url` is the *remote* picture URL (feed logo, YouTube avatar, subreddit icon) and is never sent to browsers |
+| `icon_path`, `icon_checked_at` | Cached picture in `/data/icons/<id>.<ext>` and when it was last looked up (`app/icons.py`) |
 | `channel_id`, `channel_url` | YouTube only. `channel_id` unique when not NULL |
 | `rss_enabled` | Show this source's posts in the Feed (YouTube: regular videos) |
 | `shorts_enabled` | Download Shorts (YouTube only) |

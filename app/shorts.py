@@ -14,6 +14,7 @@ import sys
 import threading
 import time
 from pathlib import Path
+from urllib.parse import urlsplit
 
 from app.config import Settings
 from app.db import kv_set, now
@@ -73,7 +74,27 @@ def resolve_channel(url: str) -> dict:
         "channel_url": f"https://www.youtube.com/channel/{channel_id}",
         "description": (info.get("description") or "")[:2000],
         "tags": info.get("tags") or [],
+        "avatar": channel_avatar(info),
     }
+
+
+def channel_avatar(info: dict) -> str | None:
+    """The channel's profile picture from yt-dlp's channel JSON (`thumbnails` also holds banners)."""
+    thumbs = [t for t in info.get("thumbnails") or [] if str(t.get("url", "")).startswith("https://")]
+    for t in thumbs:
+        if t.get("id") == "avatar_uncropped":
+            return _small_avatar(t["url"])
+    avatars = [t for t in thumbs if "avatar" in str(t.get("id", ""))]
+    square = [t for t in thumbs if t.get("width") and t.get("width") == t.get("height")]
+    pick = avatars or square
+    return _small_avatar(max(pick, key=lambda t: t.get("width") or 0)["url"]) if pick else None
+
+
+def _small_avatar(url: str) -> str:
+    """Google image URLs end in a size option (`=s0` is the original, often 500+ KB); 240 px is plenty."""
+    if urlsplit(url).hostname in ("yt3.googleusercontent.com", "yt3.ggpht.com"):
+        return re.sub(r"=s\d+[^/=]*$", "", url) + "=s240"
+    return url
 
 
 def list_channel_shorts(channel_url: str, limit: int) -> list[dict]:

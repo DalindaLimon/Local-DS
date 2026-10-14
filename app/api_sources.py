@@ -9,7 +9,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.concurrency import run_in_threadpool
 from pydantic import BaseModel, Field
 
-from app import __version__, ai, discovery, jobs, retention, settings_store, shorts
+from app import __version__, ai, discovery, icons, jobs, retention, settings_store, shorts
 from app import personalization as P
 from app.api_auth import new_invite
 from app.api_feed import invalidate_foryou, invalidate_foryou_all
@@ -60,7 +60,7 @@ def _sources_payload(conn: sqlite3.Connection, user: sqlite3.Row) -> list[dict]:
                 "title": r["title"],
                 "feed_url": r["feed_url"],
                 "site_url": r["site_url"] or r["channel_url"],
-                "icon": r["icon_url"],
+                "icon": icons.icon_url(r),
                 "enabled": bool(r["enabled"]),
                 "rss_enabled": bool(r["rss_enabled"]),
                 "shorts_enabled": bool(r["shorts_enabled"]),
@@ -114,6 +114,8 @@ async def create_source(
         jobs.submit(jobs.rss_job, s, row["id"])
     if row["kind"] == "youtube" and created:
         jobs.submit(jobs.shorts_job, s, row["id"])
+    if row["kind"] in icons.KINDS and created:
+        jobs.submit(jobs.icons_job, s, row["id"])
     payload = next((x for x in _sources_payload(conn, user) if x["id"] == row["id"]), None)
     return {"source": payload, "created": created}
 
@@ -423,7 +425,7 @@ def job_state(user=Depends(admin_user)):
 
 @router.post("/admin/jobs/{name}")
 def run_job(
-    name: Literal["rss", "shorts", "cleanup", "weights", "ytdlp_update"],
+    name: Literal["rss", "shorts", "cleanup", "weights", "ytdlp_update", "icons"],
     user=Depends(admin_user),
     s: Settings = Depends(get_settings),
 ):
@@ -433,6 +435,7 @@ def run_job(
         "cleanup": jobs.cleanup_job,
         "weights": jobs.weights_job,
         "ytdlp_update": jobs.ytdlp_job,
+        "icons": jobs.icons_job,
     }[name]
     jobs.submit(fn, s)
     return {"ok": True}

@@ -118,6 +118,7 @@ curl -s -b jar "$B/api/feed?mode=latest&limit=2"
 |---|---|---|
 | `GET /media/video/{video_id}` | user | MP4, supports `Range` (206 partial content), `ETag`, cached privately for a day. 404 when expired. Marks the file as in use for cleanup |
 | `GET /media/thumb/{video_id}` | user | JPEG, cached privately for a week |
+| `GET /media/icon/{source_id}` | user | The source's cached picture (YouTube avatar, subreddit icon, feed logo). `icon` fields in the API point here with `?v=<check time>`, or are `null` (the UI shows a letter) |
 | `GET /media/demo/{name}` | user | Demo images |
 
 ## Sources and Discover — `api_sources.py`
@@ -147,7 +148,7 @@ curl -s -b jar "$B/api/feed?mode=latest&limit=2"
 | `DELETE /api/admin/users/{id}` | admin | — | `{ok}`. Comments stay as *[deleted user]*. Can't delete yourself |
 | `POST /api/admin/refresh` | admin | — | `{ok, started}`. Runs the `rss` and `shorts` jobs now |
 | `GET /api/admin/jobs` | admin | — | `{jobs}` (same structure as in status) |
-| `POST /api/admin/jobs/{name}` | admin | `name` = `rss`, `shorts`, `cleanup`, `weights`, `ytdlp_update` | `{ok}` |
+| `POST /api/admin/jobs/{name}` | admin | `name` = `rss`, `shorts`, `cleanup`, `weights`, `ytdlp_update`, `icons` | `{ok}` |
 
 Job status entries look like
 `{"running": false, "last_run": 1760000000.0, "took": 3.2, "ok": true, "error": null, "result": "12"}`.

@@ -79,6 +79,22 @@ Discover's subreddit search uses `https://www.reddit.com/subreddits/search.json`
 A future improvement would be Reddit OAuth (app-only, ~100 requests/minute). It is listed in `CLAUDE.md` under
 ideas.
 
+## Source pictures
+
+`app/icons.py` gives each source a profile picture, downloaded once into `/data/icons/<source id>.<ext>` and
+served from `/media/icon/<id>`, so phones never contact Google or Reddit just to draw an avatar.
+
+- **YouTube:** the channel avatar from yt-dlp's channel JSON (`thumbnails` entry `avatar_uncropped`), saved when
+  the channel is added; Google image URLs are rewritten to `=s240` (~15 KB instead of the 500+ KB original).
+  Older channels are looked up by the `icons` job.
+- **Reddit:** `community_icon` / `icon_img` from `/r/<name>/about.json` (www, then old.reddit). Reddit often
+  answers 403 to anonymous servers; then the source keeps its letter and is retried after 3 days. The RSS
+  `<icon>` is Reddit's generic logo and is ignored.
+- **Blogs / sites:** the feed's own `<image>` or `<icon>`.
+
+Only real JPEG/PNG/GIF/WebP bytes are stored (checked by magic bytes), max 2 MB, fetched through `safe_get`.
+Pictures that worked are re-downloaded after 30 days; files whose source is gone are removed.
+
 ## Parsing and sanitizing
 
 `parse_feed()` uses **feedparser** for RSS 0.9x/1.0/2.0, Atom and JSON Feed-ish inputs, capped at 200 entries.

@@ -210,6 +210,8 @@ ADDED_COLUMNS = [
     ("users", "theme", "TEXT NOT NULL DEFAULT 'system'"),
     ("users", "accent", "TEXT NOT NULL DEFAULT 'ember'"),
     ("users", "layout", "TEXT NOT NULL DEFAULT 'cards'"),
+    ("sources", "icon_path", "TEXT"),  # cached picture in /data/icons (app/icons.py)
+    ("sources", "icon_checked_at", "REAL"),
 ]
 
 

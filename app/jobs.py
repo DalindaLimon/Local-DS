@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 
-from app import feeds, personalization, retention, shorts, uploads
+from app import feeds, icons, personalization, retention, shorts, uploads
 from app.config import Settings
 from app.db import connect, kv_set
 
@@ -74,6 +74,10 @@ def ytdlp_job(settings: Settings):
     return _run("ytdlp_update", settings, shorts.update_ytdlp)
 
 
+def icons_job(settings: Settings, source_id: int | None = None):
+    return _run("icons", settings, icons.refresh, source_id)
+
+
 def submit(fn: Callable, *args) -> None:
     _executor.submit(fn, *args)
 
@@ -89,6 +93,7 @@ def start_scheduler(settings: Settings) -> BackgroundScheduler:
     sched.add_job(cleanup_job, "interval", hours=1, args=[settings], id="cleanup")
     sched.add_job(weights_job, CronTrigger(hour=3, minute=30), args=[settings], id="weights")
     sched.add_job(ytdlp_job, "interval", hours=24, args=[settings], id="ytdlp_update", next_run_time=_soon(30))
+    sched.add_job(icons_job, "interval", hours=6, args=[settings], id="icons", next_run_time=_soon(150))
     sched.start()
     log.info("scheduler started")
     global scheduler

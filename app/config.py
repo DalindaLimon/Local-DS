@@ -98,11 +98,19 @@ class Settings:
         return self.data_dir / "thumbs"
 
     @property
+    def uploads_dir(self) -> Path:
+        return self.data_dir / "uploads"
+
+    @property
+    def icons_dir(self) -> Path:
+        return self.data_dir / "icons"
+
+    @property
     def tmp_dir(self) -> Path:
         return self.data_dir / "tmp"
 
     def ensure_dirs(self) -> None:
-        for d in (self.data_dir, self.videos_dir, self.thumbs_dir, self.tmp_dir, self.data_dir / "uploads"):
+        for d in (self.data_dir, self.videos_dir, self.thumbs_dir, self.tmp_dir, self.uploads_dir, self.icons_dir):
             d.mkdir(parents=True, exist_ok=True)
 
 

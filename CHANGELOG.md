@@ -5,6 +5,14 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.5.2] - 2026-10-14
+
+### Added
+- **Source pictures:** YouTube channels show their profile picture and subreddits their icon (feed cards, Reels,
+  Sources, filters). Pictures are downloaded once to `/data/icons` and served by your server, so phones don't
+  contact Google or Reddit for them. Reddit often blocks anonymous servers; then the coloured letter stays and it
+  retries every 3 days. Admin → *Fetch source pictures* runs it now.
+
 ### Fixed
 - `scripts/backup.sh` no longer aborts with "file changed as we read it" when the app is running.
 - `python -m app.seed --remove` now also deletes the demo accounts (`demo`, `friend`) unless their password was

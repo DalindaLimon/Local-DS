@@ -129,6 +129,7 @@ in-memory `job_status` dict (shown on the Admin page) and its start time in the 
 | `cleanup` | `retention.reconcile` + `retention.cleanup` | hourly | (already ran at startup) |
 | `weights` | `personalization.recompute_all` | daily 03:30 (container time, UTC unless `TZ` is set) | — |
 | `ytdlp_update` | `shorts.update_ytdlp` | every 24 h | 30 s |
+| `icons` | `icons.refresh` (15 sources per run) | every 6 h, and right after a source is added | 150 s |
 
 Scheduler options: `coalesce=True`, `max_instances=1`, `misfire_grace_time=600`, so a slow job never runs twice
 at once and missed runs are merged.

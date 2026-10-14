@@ -72,12 +72,12 @@ def add_source(
         )
         with tx(conn):
             cur = conn.execute(
-                """INSERT INTO sources(kind, title, feed_url, site_url, channel_id, channel_url, rss_enabled,
+                """INSERT INTO sources(kind, title, feed_url, site_url, channel_id, channel_url, icon_url, rss_enabled,
                    shorts_enabled, topics, status, created_by, created_at)
-                   VALUES('youtube', ?, ?, ?, ?, ?, ?, 1, ?, 'new', ?, ?)""",
+                   VALUES('youtube', ?, ?, ?, ?, ?, ?, ?, 1, ?, 'new', ?, ?)""",
                 (
                     ch["title"], feeds.youtube_feed_url(ch["channel_id"]), ch["channel_url"], ch["channel_id"],
-                    ch["channel_url"], 1 if also_rss else 0, ",".join(tps), user_id, t,
+                    ch["channel_url"], ch.get("avatar"), 1 if also_rss else 0, ",".join(tps), user_id, t,
                 ),
             )  # fmt: skip
         return conn.execute("SELECT * FROM sources WHERE id=?", (cur.lastrowid,)).fetchone(), True
