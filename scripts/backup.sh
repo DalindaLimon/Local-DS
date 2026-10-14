@@ -30,7 +30,7 @@ while [ $# -gt 0 ]; do
     shift
 done
 
-env_get() { [ -f "$ROOT/.env" ] && grep -E "^$1=" "$ROOT/.env" | tail -n1 | cut -d= -f2- || true; }
+env_get() { if [ -f "$ROOT/.env" ]; then grep -E "^$1=" "$ROOT/.env" | tail -n1 | cut -d= -f2- || true; fi; }
 DATA="$(env_get DATA_PATH)"
 DATA="${DATA:-./data}"
 case "$DATA" in /*) ;; *) DATA="$ROOT/${DATA#./}" ;; esac

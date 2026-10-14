@@ -8,12 +8,12 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ARCHIVE="${1:-}"
-[ -n "$ARCHIVE" ] && [ -f "$ARCHIVE" ] || { echo "Usage: $0 <backup.tar.gz>" >&2; exit 1; }
+if [ -z "$ARCHIVE" ] || [ ! -f "$ARCHIVE" ]; then echo "Usage: $0 <backup.tar.gz>" >&2; exit 1; fi
 ARCHIVE="$(cd "$(dirname "$ARCHIVE")" && pwd)/$(basename "$ARCHIVE")"
 
 tar -tzf "$ARCHIVE" | grep -qx './swipefeed.db' || { echo "Not a Local DS backup: $ARCHIVE" >&2; exit 1; }
 
-env_get() { [ -f "$ROOT/.env" ] && grep -E "^$1=" "$ROOT/.env" | tail -n1 | cut -d= -f2- || true; }
+env_get() { if [ -f "$ROOT/.env" ]; then grep -E "^$1=" "$ROOT/.env" | tail -n1 | cut -d= -f2- || true; fi; }
 DATA="$(env_get DATA_PATH)"
 DATA="${DATA:-./data}"
 case "$DATA" in /*) ;; *) DATA="$ROOT/${DATA#./}" ;; esac
