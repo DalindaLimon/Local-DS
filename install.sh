@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 # Local DS installer for a Debian 12 LXC (or VM). Idempotent: safe to run again.
 #
-#   curl -fsSL https://raw.githubusercontent.com/YOUR_GITHUB_USER/local-ds/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/DalindaLimon/local-ds/main/install.sh | bash
 #   ./install.sh [--yes] [--port 8080] [--retention 7] [--demo]
 #   ./install.sh --update
 #   ./install.sh --uninstall [--purge]
 set -euo pipefail
 
 # ----------------------------------------------------------------------------- settings
-REPO="${REPO:-YOUR_GITHUB_USER/local-ds}"   # <owner>/<repo> on GitHub
+REPO="${REPO:-DalindaLimon/local-ds}"   # <owner>/<repo> on GitHub
 BRANCH="${BRANCH:-main}"
 APP_NAME="localds"
 INSTALL_DIR="${INSTALL_DIR:-}"

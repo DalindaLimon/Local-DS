@@ -19,7 +19,7 @@ SWAP=512
 CORES=2
 BRIDGE="vmbr0"
 GPU=0
-REPO="${REPO:-YOUR_GITHUB_USER/local-ds}"
+REPO="${REPO:-DalindaLimon/local-ds}"
 
 usage() { sed -n '2,10p' "$0" | sed 's/^# \{0,1\}//'; }
 

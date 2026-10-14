@@ -21,7 +21,7 @@ Requirements: **Python 3.12+**, **ffmpeg** (the Shorts pipeline tests use it), *
 `node --check`), **shellcheck** (for the shell scripts), git.
 
 ```bash
-git clone https://github.com/YOUR_GITHUB_USER/local-ds.git && cd local-ds
+git clone https://github.com/DalindaLimon/local-ds.git && cd local-ds
 python3 -m venv .venv
 source .venv/bin/activate              # fish: source .venv/bin/activate.fish ; Windows: .venv\Scripts\activate
 pip install -r requirements-dev.txt    # app deps + pytest, ruff, yt-dlp

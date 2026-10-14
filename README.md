@@ -48,7 +48,7 @@ Screenshots come from the built-in demo data (`python -m app.seed`) via `scripts
 On any machine with Docker:
 
 ```bash
-git clone https://github.com/DalindaLimon/Local-DS.git && cd local-ds
+git clone https://github.com/DalindaLimon/local-ds.git && cd local-ds
 cp .env.example .env          # optional: every setting has a default
 docker compose up -d --build
 ```
@@ -102,5 +102,5 @@ stylesheet, with no framework and no build step.
 [MIT](LICENSE). Local DS downloads videos with yt-dlp for private viewing; respect the content's terms and copyright
 in your jurisdiction.
 
-> Before publishing a fork, replace `YOUR_GITHUB_USER` in this README, `install.sh`, `.env.example`, the docs and
-> `scripts/proxmox-create-lxc.sh` with your GitHub user name.
+> Forking? Replace `DalindaLimon/local-ds` in this README, `install.sh`, `.env.example`, the docs and
+> `scripts/proxmox-create-lxc.sh` with your own `<user>/<repo>` (or set `REPO=<user>/<repo>` when running `install.sh`).

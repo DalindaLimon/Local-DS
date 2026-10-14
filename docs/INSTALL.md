@@ -32,7 +32,7 @@ Docker inside an LXC needs two container features: **nesting** and **keyctl**.
 **Helper script (on the Proxmox host shell):**
 
 ```bash
-curl -fsSLO https://raw.githubusercontent.com/YOUR_GITHUB_USER/local-ds/main/scripts/proxmox-create-lxc.sh
+curl -fsSLO https://raw.githubusercontent.com/DalindaLimon/local-ds/main/scripts/proxmox-create-lxc.sh
 bash proxmox-create-lxc.sh --gpu        # creates the CT, passes the iGPU through, runs install.sh inside
 ```
 
@@ -53,7 +53,7 @@ bash proxmox-create-lxc.sh --gpu        # creates the CT, passes the iGPU throug
 Inside the LXC, as root:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/YOUR_GITHUB_USER/local-ds/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/DalindaLimon/local-ds/main/install.sh | bash
 ```
 
 The installer is **idempotent** (safe to run again). It:
@@ -94,7 +94,7 @@ docker run --rm hello-world
 ## Option B: any Docker host, by hand
 
 ```bash
-git clone https://github.com/YOUR_GITHUB_USER/local-ds.git /opt/localds && cd /opt/localds
+git clone https://github.com/DalindaLimon/local-ds.git /opt/localds && cd /opt/localds
 cp .env.example .env
 sed -i "s|^SECRET_KEY=.*|SECRET_KEY=$(openssl rand -base64 48 | tr -d '\n/+=')|" .env
 mkdir -p data && chown 1000:1000 data
@@ -106,7 +106,7 @@ If port 8080 is taken on that machine (another app already uses it), set `PORT=8
 `.env` and run `docker compose up -d` again. The app inside the container always listens on 8080; `PORT` only
 changes the port on the host.
 
-**Using the prebuilt image instead of building:** set `IMAGE=ghcr.io/YOUR_GITHUB_USER/local-ds:latest` in
+**Using the prebuilt image instead of building:** set `IMAGE=ghcr.io/DalindaLimon/local-ds:latest` in
 `.env`, then `docker compose pull && docker compose up -d`. Images are multi-arch (amd64/arm64) and are built by
 GitHub Actions for every `v*` tag.
 

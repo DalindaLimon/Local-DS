@@ -158,8 +158,8 @@ Verified in the build sandbox: 115 tests pass, ruff/shellcheck clean, UI checked
 - `install.sh` and `scripts/proxmox-create-lxc.sh` on a real Proxmox host.
 - iOS Safari / installed PWA behaviour on a real phone.
 
-Placeholders to replace before publishing: `YOUR_GITHUB_USER` in README.md, install.sh, .env.example,
-scripts/proxmox-create-lxc.sh.
+Repository: https://github.com/DalindaLimon/local-ds (public). Image: `ghcr.io/dalindalimon/local-ds` on `v*` tags.
+Run the app from this folder only; `.env`, `data/` and `CLAUDE.local.md` are gitignored and must never be committed.
 
 ## Ideas / possible next steps
 
