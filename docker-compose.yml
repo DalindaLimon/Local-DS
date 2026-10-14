@@ -15,7 +15,7 @@ services:
     environment:
       DATA_DIR: /data
     ports:
-      - "${BIND_ADDRESS:-0.0.0.0}:${PORT:-8081}:8085"
+      - "${BIND_ADDRESS:-0.0.0.0}:$${PORT:-8080}:8080"
     volumes:
       - ${DATA_PATH:-./data}:/data
     mem_limit: ${MEM_LIMIT:-2g}
