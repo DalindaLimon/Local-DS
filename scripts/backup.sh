@@ -58,8 +58,12 @@ fi
 echo "==> Writing $OUT"
 excludes=(--exclude=./swipefeed.db --exclude=./swipefeed.db-wal --exclude=./swipefeed.db-shm --exclude=./tmp)
 if [ "$NO_VIDEOS" -eq 1 ]; then excludes+=(--exclude=./videos); fi
-tar -C "$DATA" -czf "$OUT" "${excludes[@]}" \
-    --transform "s|^\./$SNAP\$|./swipefeed.db|" .
+# The app keeps writing (logs, -wal/-shm, downloads) while we read; GNU tar exits 1 for "file changed as we read
+# it", which is harmless here because the database comes from the consistent snapshot above. Exit 2+ is fatal.
+rc=0
+tar -C "$DATA" -czf "$OUT" "${excludes[@]}" --warning=no-file-changed \
+    --transform "s|^\./$SNAP\$|./swipefeed.db|" . || rc=$?
+if [ "$rc" -gt 1 ]; then rm -f "$OUT"; echo "tar failed (exit $rc)" >&2; exit "$rc"; fi
 chmod 600 "$OUT"
 echo "    $(du -h "$OUT" | cut -f1)  $OUT"
 

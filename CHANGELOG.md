@@ -6,6 +6,7 @@ and the project uses [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Fixed
+- `scripts/backup.sh` no longer aborts with "file changed as we read it" when the app is running.
 - `python -m app.seed --remove` now also deletes the demo accounts (`demo`, `friend`) unless their password was
   changed; before, an admin account with a public password could be left behind.
 - CI validates `docker-compose.yml` (a broken ports line passed CI before).
