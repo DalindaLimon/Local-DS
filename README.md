@@ -8,7 +8,7 @@ outside service ranking your content.
 > **Local DS** is short for *doomscroll*. The Docker image, container and compose service are named `localds`
 > (Docker names can't have spaces), so commands below use that name.
 
-[![CI](https://github.com/YOUR_GITHUB_USER/local-ds/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_GITHUB_USER/local-ds/actions/workflows/ci.yml)
+[![CI](https://github.com/DalindaLimon/local-ds/actions/workflows/ci.yml/badge.svg)](https://github.com/DalindaLimon/local-ds/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 ## Features
@@ -48,7 +48,7 @@ Screenshots come from the built-in demo data (`python -m app.seed`) via `scripts
 On any machine with Docker:
 
 ```bash
-git clone https://github.com/YOUR_GITHUB_USER/local-ds.git && cd local-ds
+git clone https://github.com/DalindaLimon/Local-DS.git && cd local-ds
 cp .env.example .env          # optional: every setting has a default
 docker compose up -d --build
 ```
