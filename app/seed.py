@@ -16,7 +16,9 @@ from pathlib import Path
 
 from app.config import Settings, load_settings
 from app.db import connect, init_db, tx
-from app.security import hash_password
+from app.security import hash_password, verify_password
+
+DEMO_USERS = {"demo": "demo-password", "friend": "friend-password"}
 
 DEMO_SOURCES = [
     ("Demo: Homelab Weekly", "homelab,linux"),
@@ -102,7 +104,14 @@ def remove(s: Settings) -> None:
             )
             conn.execute("DELETE FROM shorts WHERE source_id=?", (sid,))
             conn.execute("DELETE FROM sources WHERE id=?", (sid,))
-    print(f"removed {len(ids)} demo sources")
+        # Demo accounts have publicly known passwords. Remove them unless their password was changed.
+        users = conn.execute("SELECT id, username, pw_hash FROM users").fetchall()
+        known = [
+            u for u in users if u["username"] in DEMO_USERS and verify_password(u["pw_hash"], DEMO_USERS[u["username"]])
+        ]
+        for u in known:
+            conn.execute("DELETE FROM users WHERE id=?", (u["id"],))
+    print(f"removed {len(ids)} demo sources and {len(known)} demo user(s)")
 
 
 def seed(s: Settings, with_users: bool = False, videos: bool = True) -> None:
@@ -117,13 +126,14 @@ def seed(s: Settings, with_users: bool = False, videos: bool = True) -> None:
     if with_users and conn.execute("SELECT COUNT(*) FROM users").fetchone()[0] == 0:
         conn.execute(
             "INSERT INTO users(username, pw_hash, is_admin, created_at) VALUES('demo', ?, 1, ?)",
-            (hash_password("demo-password"), now),
+            (hash_password(DEMO_USERS["demo"]), now),
         )
         conn.execute(
             "INSERT INTO users(username, pw_hash, is_admin, created_at) VALUES('friend', ?, 0, ?)",
-            (hash_password("friend-password"), now),
+            (hash_password(DEMO_USERS["friend"]), now),
         )
         print("created users demo/demo-password (admin) and friend/friend-password")
+        print("these passwords are public: run `python -m app.seed --remove` before real use")
 
     if conn.execute("SELECT 1 FROM sources WHERE kind='demo'").fetchone():
         print("demo data already present (use --remove first to re-create)")

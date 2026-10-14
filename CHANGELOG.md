@@ -5,6 +5,12 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+- `python -m app.seed --remove` now also deletes the demo accounts (`demo`, `friend`) unless their password was
+  changed; before, an admin account with a public password could be left behind.
+- CI validates `docker-compose.yml` (a broken ports line passed CI before).
+- SECURITY.md: working link for private vulnerability reports, notes on the first-run admin and demo accounts.
+
 ## [0.5.1] - 2026-10-13
 
 ### Added

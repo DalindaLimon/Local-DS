@@ -54,13 +54,13 @@ docker compose up -d --build
 ```
 
 Open `http://<host>:8080` (or the `PORT` you set in `.env`). The first visit asks you to create the admin
-account. Then add sources under **More → Sources**, or pick some from **Discover**.
+account; do that right away, since until then anyone who can reach the page could claim it. Then add sources under **More → Sources**, or pick some from **Discover**.
 
 Want to look around first? Load demo posts, test videos and two demo users:
 
 ```bash
 docker compose exec -u 1000:1000 localds python -m app.seed --users   # demo / demo-password (admin), friend / friend-password
-docker compose exec -u 1000:1000 localds python -m app.seed --remove  # remove the demo content again
+docker compose exec -u 1000:1000 localds python -m app.seed --remove  # remove the demo content and demo users again
 ```
 
 For a proper install on Proxmox (Debian 12 LXC, one-command installer, iGPU encoding), see
